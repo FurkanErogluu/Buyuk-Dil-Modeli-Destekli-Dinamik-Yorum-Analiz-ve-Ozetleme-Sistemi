@@ -17,7 +17,7 @@ import random
 logger = setup_logger()
 
 
-def kategori_verilerini_yukle(dosya_yolu="kategori_haritasi.json"):
+def kategori_verilerini_yukle(dosya_yolu="maps_ham_kategoriler.json"):
     try:
         with open(dosya_yolu, "r", encoding="utf-8") as f:
             data = json.load(f)
