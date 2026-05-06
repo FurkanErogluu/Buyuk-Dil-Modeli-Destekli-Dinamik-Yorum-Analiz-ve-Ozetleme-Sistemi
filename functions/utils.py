@@ -119,3 +119,41 @@ def url_cozumle(url : str) -> tuple[str, str]  :
             return platform, match.group(1)
 
     return platform, "Unknown"
+
+
+
+def kategori_grupla(ham_liste):
+    if not ham_liste:
+        return "Diğer"
+        
+    tam_metin = " ".join(ham_liste).lower()
+    
+    if any(x in tam_metin for x in ["kedi", "köpek", "petshop", "maması", "catnip", "vitamini"]): return "Pet Shop"
+    if any(x in tam_metin for x in ["masa tenisi", "raketi", "futbol forması", "dambıl", "kondisyon"]): return "Spor & Outdoor"
+    if any(x in tam_metin for x in ["akıllı saat", "akilli saat", "apple watch", "galaxy watch"]): return "Elektronik & Teknoloji"
+    if any(x in tam_metin for x in ["bebek", "zıbın", "emzik", "puset", "oyuncak", "lego", "puzzle"]): return "Anne & Bebek & Oyuncak"
+    if any(x in tam_metin for x in ["toka", "kolye", "bileklik", "küpe", "yüzük", "tesbih", "takı","çanta", "cüzdan", "valiz", "bavul"]): return "Aksesuar & Takı"
+    
+    gruplar = {
+        "Giyim & Ayakkabı": ["t-shirt", "jean", "pantolon", "ceket", "mont", "sweatshirt", "gömlek", "kazak", "tayt", "bot", "sneaker", "terlik", "ayakkabı", "pijama", "forma", "eşofman", "çorap", "korse", "şal", "bone","elbise","giyim"],
+        "Ev & Yaşam & Mobilya": ["fırın", "tencere", "kahve makinesi", "su sebili", "ütü", "süpürge", "mobilya", "yatak", "havlu", "perde", "askılık", "dolap", "masa", "koltuk", "alez", "yastık", "ayna", "mutfak", "termos", "armatür", "sehpa","ev gereçleri","aydınlatma","yorgan","ev","teskstil"],
+        "Kırtasiye & Kitap & Hobi": ["kalem", "defter", "boya", "oyun", "enstrüman", "kitap", "ofis", "nargile", "plak", "mızıka", "kalimba", "tuval", "düğme", "ip", "kağıt", "dosya", "kar küresi", "hediyelik","bijuteri","hobi",],
+        "Kozmetik & Kişisel Bakım": ["şampuan", "krem", "parfüm", "tıraş", "makyaj", "ruj", "cilt", "maskara", "oje", "fondöten", "manikür", "fırça", "parlatıcı", "deodorant", "diş", "bakım", "temizleme"],
+        "Elektronik & Teknoloji": ["tablet", "laptop", "bilgisayar", "telefon", "kulaklık", "hoparlör", "tv", "kamera", "ssd", "usb", "bellek", "ekran koruyucu", "şarj", "batarya", "kumanda", "uydu", "kablo", "mouse", "klavye","elektrikli ev aletleri","ocak","davlumbaz","beyaz eşya","elektronik","ev elektroniği"],
+        "Spor & Outdoor": ["futbol", "bisiklet", "kamp", "fitness", "dambıl", "scooter", "spor", "olta", "mat", "pompa", "raket", "voleybol", "fener", "dalış"],
+        "Süpermarket & Gıda": ["kakao", "kahve", "zeytin", "peynir", "atıştırmalık", "çikolata", "bisküvi", "içecek", "su", "baharat", "zeytinyağı", "gıda", "deterjan","baharat"]
+    }
+
+    skorlar = {g: 0 for g in gruplar.keys()}
+    
+    for i, kat_adi in enumerate(reversed(ham_liste)):
+        temiz_kat = kat_adi.lower().strip()
+        agirlik = 25 if i == 0 else (15 if i == 1 else 1)
+        
+        for grup, anahtar_kelimeler in gruplar.items():
+            for anahtar in anahtar_kelimeler:
+                if anahtar in temiz_kat:
+                    skorlar[grup] += agirlik
+
+    max_skor = max(skorlar.values())
+    return max(skorlar, key=skorlar.get) if max_skor > 0 else "Diğer"

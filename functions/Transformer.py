@@ -5,8 +5,11 @@ import json
 import re
 import urllib.parse
 from typing import Tuple, List, Dict
-
+from functions.utils import kategori_grupla
 from functions.utils import ciceksepeti_kategori_hibrit
+
+
+
 
 
 def process_airbnb_data(raw_json: dict) -> tuple[dict, list[dict]]:
@@ -25,7 +28,7 @@ def process_airbnb_data(raw_json: dict) -> tuple[dict, list[dict]]:
         "url_hash": None,
         "status": "active",
         "click_count": 0,
-        "avg_orj_score": None, # altta hesaplamasını yapıldı(halit-fero)!
+        "avg_orj_score": None, 
         "avg_model_score": None,
         "guncel_ozet": None,
         "created_at": datetime.now(),
@@ -202,13 +205,18 @@ def process_hepsiburada_data(raw_json: dict) -> tuple[dict, list[dict]]:
     orijinal_url = raw_json.get("link", "")
     platform = "hepsiburada"
 
+    # 🎯 DUZELTME: Ham kategori listesini guvenli bir sekilde çekip algoritmayla grupluyoruz
+    kategori_agaci = raw_json.get("kategori") or []
+    gercek_kategori = kategori_grupla(kategori_agaci)
+
+
     urun_paket = {
         "id": product_uuid,
         "platform": None,
         "platform_id": None,
         "product_name": raw_json.get("baslik"),
         "image_url": raw_json.get("gorsel_url"),
-        "category": None,
+        "category": gercek_kategori.lower(), # ➔ Sabitlenen temiz kategori sonucunu bagladik
         "original_url": None,
         "url_hash": None,
         "status": "active",
@@ -240,9 +248,64 @@ def process_hepsiburada_data(raw_json: dict) -> tuple[dict, list[dict]]:
         review_packets.append({
             "product_id": product_uuid,
             "original_rating": raw_review.get("star"),
-            "rating_int": round(raw_review.get("star")),
+            "rating_int": round(raw_review.get("star") or 0),
             "predicted_score": None,
-            "raw_text": raw_review.get("review", {}).get("content", ""), # Scraper yapına göre
+            "raw_text": raw_review.get("review", {}).get("content", ""), 
+            "clean_text": raw_review.get("temiz_metin"),
+            "metadata": metadata,
+            "created_at": datetime.now()
+        })
+
+    return urun_paket, review_packets
+
+
+def process_trendyol_data(raw_json: dict) -> tuple[dict, list[dict]]:
+    product_uuid = str(uuid4())
+    orijinal_url = raw_json.get("link", "")
+    platform = "trendyol"
+
+    kategori_agaci = raw_json.get("kategori") or []
+    gercek_kategori = kategori_grupla(kategori_agaci)
+
+    urun_paket = {
+        "id": product_uuid,
+        "platform": None,
+        "platform_id": None,
+        "product_name": raw_json.get("baslik"),
+        "image_url": raw_json.get("gorsel_url"),
+        "category": gercek_kategori.lower(),
+        "original_url": None,
+        "url_hash": None,
+        "status": "active",
+        "click_count": 0,
+        "avg_orj_score": None,   
+        "avg_model_score": None, 
+        "guncel_ozet": None,
+        "created_at": datetime.now(),
+        "last_updated_at": datetime.now()
+    }
+
+    ham_yorumlar = raw_json.get("yorumlar", [])
+    ratings = [y.get("rate") for y in ham_yorumlar if isinstance(y.get("rate"), (int, float))]
+    if ratings:
+        urun_paket["avg_orj_score"] = round(sum(ratings) / len(ratings), 2)
+
+    review_packets = []
+    for raw_review in ham_yorumlar:
+        metadata = {
+            "media_files": raw_review.get("mediaFiles"),   
+            "seller_info": raw_review.get("seller"),
+            "rate": raw_review.get("rate"),
+            "is_trusted": raw_review.get("trusted"),
+            "likesCount": raw_review.get("likesCount"),
+        }
+
+        review_packets.append({
+            "product_id": product_uuid,
+            "original_rating": raw_review.get("rate"),
+            "rating_int": round(raw_review.get("rate") or 0),
+            "predicted_score": None,  
+            "raw_text": raw_review.get("metin") or raw_review.get("comment"),  
             "clean_text": raw_review.get("temiz_metin"),
             "metadata": metadata,
             "created_at": datetime.now()
@@ -327,7 +390,7 @@ def process_steam_data(raw_json: dict) -> tuple[dict, list[dict]]:
         "platform_id": None,
         "product_name": raw_json.get("baslik"),
         "image_url": raw_json.get("gorsel_url"),
-        "category": "oyun",  # Steam her zaman oyun olduğu için statik verebiliriz
+        "category": "oyun",
         "original_url": None,
         "url_hash": None,
         "status": "active",
@@ -341,11 +404,11 @@ def process_steam_data(raw_json: dict) -> tuple[dict, list[dict]]:
 
     ham_yorumlar = raw_json.get("yorumlar", [])
 
-    # Senin zekice kurguladığın oranlama mantığı:
+
     if ham_yorumlar:
         olumlu_sayisi = sum(1 for y in ham_yorumlar if y.get("voted_up") is True)
         oran = olumlu_sayisi / len(ham_yorumlar)
-        # Oranı 5'lik sisteme çekip 0.5 katlarına yuvarlıyoruz
+
         urun_paket["avg_orj_score"] = round((oran * 5) * 2) / 2
     else:
         urun_paket["avg_orj_score"] = None
@@ -376,56 +439,7 @@ def process_steam_data(raw_json: dict) -> tuple[dict, list[dict]]:
 
     return urun_paket, review_packets
 
-def process_trendyol_data(raw_json:dict) -> tuple[dict, list[dict]]:
-    product_uuid = str(uuid4())
-    orijinal_url = raw_json.get("link","")
-    platform="trendyol"
 
-    urun_paket = {
-        "id": product_uuid,
-        "platform": None,
-        "platform_id": None,
-        "product_name": raw_json.get("baslik"),
-        "image_url": raw_json.get("gorsel_url"),
-        "category": None, #setfit ile dolacak
-        "original_url": None,
-        "url_hash": None,
-        "status":"active",
-        "click_count": 0,
-        "avg_orj_score": None,   #aşagıda hesaplanacak
-        "avg_model_score": None, #modelimizin skoru
-        "guncel_ozet": None,
-        "created_at": datetime.now(),
-        "last_updated_at": datetime.now()
-    }
-
-    ham_yorumlar = raw_json.get("yorumlar", [])
-    ratings = [y.get("rate") for y in ham_yorumlar if isinstance(y.get("rate"), (int, float))]
-    if ratings:
-        urun_paket["avg_orj_score"] = round(sum(ratings) / len(ratings), 2) #vt de decimal(3,2) olarak bekliyoruz.
-
-    review_packets = []
-    for raw_review in ham_yorumlar:
-        metadata = {
-            "media_files": raw_review.get("mediaFiles"),   #yorum yapan kişinin fotoğraf paylaşıp paylaşmadığı
-            "seller_info": raw_review.get("seller"),
-            "rate": raw_review.get("rate"),
-            "is_trusted": raw_review.get("trusted"),
-            "likesCount": raw_review.get("likesCount"),
-        }
-
-        review_packets.append({
-            "product_id": product_uuid,
-            "original_rating": raw_review.get("rate"),
-            "rating_int": round(raw_review.get("rate") or 0),
-            "predicted_score": None,  # NLP modelinden gelecek
-            "raw_text": raw_review.get("metin") or raw_review.get("comment"),  # Scraper'daki ham alan
-            "clean_text": raw_review.get("temiz_metin"),
-            "metadata": metadata,
-            "created_at": datetime.now()
-        })
-
-    return urun_paket, review_packets
 
 def process_tygo_data(raw_json: dict) -> tuple[dict, list[dict]]:
     product_uuid = str(uuid4())
@@ -438,7 +452,7 @@ def process_tygo_data(raw_json: dict) -> tuple[dict, list[dict]]:
         "platform_id": None,
         "product_name": raw_json.get("baslik"),
         "image_url": raw_json.get("gorsel_url"),
-        "category": "yemek", # TyGo genelde yemek odaklıdır
+        "category": "yemek", 
         "original_url": None,
         "url_hash": None,
         "status": "active",
@@ -623,3 +637,4 @@ def donustur_ve_kaydet(ham_json_yolu: str, platform: str, platform_id: str, temi
 
 
 
+ 
