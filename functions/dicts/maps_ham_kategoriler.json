@@ -33,7 +33,7 @@
             "çiğköfte",
             "köfte"
         ],
-        "gezilecek Yer": [
+        "gezilecek_yer": [
             "müze",
             "museum",
             "tarihi",
@@ -56,7 +56,7 @@
             "yayla",
             "göl"
         ],
-        "sağlık": [
+        "saglik": [
             "hastanesi",
             "hospital",
             "tıp merkezi",
@@ -70,7 +70,7 @@
             "doktor",
             "bakım"
         ],
-        "alışveriş": [
+        "alisveris": [
             "avm",
             "alışveriş",
             "merkezi",
@@ -111,7 +111,7 @@
             "iş merkezi",
             "genel müdürlük"
         ],
-        "eğitim & eğlence": [
+        "egitim_eglence": [
             "üniversite",
             "kursu",
             "okulu",
@@ -162,5 +162,5 @@
             "lodge"
         ]
     },
-    "varsayilan_kategori": "Diğer"
+    "varsayilan_kategori": "diğer"
 }
