@@ -3,6 +3,10 @@ from urllib.parse import urlparse, urlunparse
 import urllib.parse
 import hashlib
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def url_cleaning(url: str) -> str:
     if not url:
@@ -18,7 +22,7 @@ def url_hashing(clean_url: str) -> str:
 
 def ciceksepeti_kategori_hibrit(urun_adi):
     if not urun_adi:
-        return "hediyelik_eşya"
+        return "hediyelik_esya"
 
     # 1. ÖN İŞLEME (Normalization)
     # Küçük harf ve gereksiz boşluk temizliği
@@ -26,12 +30,12 @@ def ciceksepeti_kategori_hibrit(urun_adi):
 
     # Kategori Anahtarları (Regex için | ile birleştirilmiş, Fuzzy için liste)
     keywords = {
-        "yenilebilir_çiçek": [
+        "yenilebilir_cicek": [
             "kek", "çikolata", "cikolata", "truf", "trüf", "draje", "kahve",
             "gurme", "lezzet", "bonnyfood", "atıştırmalık", "atıstırmalık",
             "atistirmalik", "dondurma", "meyve sepeti", "gurme"
         ],
-        "çiçek": [
+        "cicek": [
             "gül", "gul", "papatya", "orkide", "buket", "saksı", "saksi",
             "aranjman", "teraryum", "gerbera", "lilyum", "bitki", "kalanchoe",
             "spatifilyum", "husnuyusuf", "hüsnüyusuf", "karanfil"
@@ -52,7 +56,7 @@ def ciceksepeti_kategori_hibrit(urun_adi):
     word_list = text.split()
 
     # Öncelik hiyerarşisini koruyoruz (Önce Yenilebilir)
-    for cat_name in ["yenilebilir_çiçek", "çiçek"]:
+    for cat_name in ["yenilebilir_cicek", "cicek"]:
         for target_word in keywords[cat_name]:
             # extractOne en yakın kelimeyi bulur. [1] skoru verir.
             # limit=90 yaparak yanlış eşleşmeleri (False Positive) engelliyoruz.
@@ -61,7 +65,7 @@ def ciceksepeti_kategori_hibrit(urun_adi):
                 return cat_name
 
     # --- KATMAN 3: VARSAYILAN ---
-    return "hediyelik_eşya"
+    return "hediyelik_esya"
 
 
 def url_cozumle(url : str) -> tuple[str, str]  :
@@ -124,24 +128,24 @@ def url_cozumle(url : str) -> tuple[str, str]  :
 
 def kategori_grupla(ham_liste):
     if not ham_liste:
-        return "Diğer"
+        return "diger"
         
     tam_metin = " ".join(ham_liste).lower()
     
-    if any(x in tam_metin for x in ["kedi", "köpek", "petshop", "maması", "catnip", "vitamini"]): return "Pet Shop"
-    if any(x in tam_metin for x in ["masa tenisi", "raketi", "futbol forması", "dambıl", "kondisyon"]): return "Spor & Outdoor"
-    if any(x in tam_metin for x in ["akıllı saat", "akilli saat", "apple watch", "galaxy watch"]): return "Elektronik & Teknoloji"
-    if any(x in tam_metin for x in ["bebek", "zıbın", "emzik", "puset", "oyuncak", "lego", "puzzle"]): return "Anne & Bebek & Oyuncak"
-    if any(x in tam_metin for x in ["toka", "kolye", "bileklik", "küpe", "yüzük", "tesbih", "takı","çanta", "cüzdan", "valiz", "bavul"]): return "Aksesuar & Takı"
+    if any(x in tam_metin for x in ["kedi", "köpek", "petshop", "maması", "catnip", "vitamini"]): return "pet_shop"
+    if any(x in tam_metin for x in ["masa tenisi", "raketi", "futbol forması", "dambıl", "kondisyon"]): return "spor_outdoor"
+    if any(x in tam_metin for x in ["akıllı saat", "akilli saat", "apple watch", "galaxy watch"]): return "elektronik_teknoloji"
+    if any(x in tam_metin for x in ["bebek", "zıbın", "emzik", "puset", "oyuncak", "lego", "puzzle"]): return "anne_bebek_oyuncak"
+    if any(x in tam_metin for x in ["toka", "kolye", "bileklik", "küpe", "yüzük", "tesbih", "takı","çanta", "cüzdan", "valiz", "bavul"]): return "aksesuar_taki"
     
     gruplar = {
-        "Giyim & Ayakkabı": ["t-shirt", "jean", "pantolon", "ceket", "mont", "sweatshirt", "gömlek", "kazak", "tayt", "bot", "sneaker", "terlik", "ayakkabı", "pijama", "forma", "eşofman", "çorap", "korse", "şal", "bone","elbise","giyim"],
-        "Ev & Yaşam & Mobilya": ["fırın", "tencere", "kahve makinesi", "su sebili", "ütü", "süpürge", "mobilya", "yatak", "havlu", "perde", "askılık", "dolap", "masa", "koltuk", "alez", "yastık", "ayna", "mutfak", "termos", "armatür", "sehpa","ev gereçleri","aydınlatma","yorgan","ev","teskstil"],
-        "Kırtasiye & Kitap & Hobi": ["kalem", "defter", "boya", "oyun", "enstrüman", "kitap", "ofis", "nargile", "plak", "mızıka", "kalimba", "tuval", "düğme", "ip", "kağıt", "dosya", "kar küresi", "hediyelik","bijuteri","hobi",],
-        "Kozmetik & Kişisel Bakım": ["şampuan", "krem", "parfüm", "tıraş", "makyaj", "ruj", "cilt", "maskara", "oje", "fondöten", "manikür", "fırça", "parlatıcı", "deodorant", "diş", "bakım", "temizleme"],
-        "Elektronik & Teknoloji": ["tablet", "laptop", "bilgisayar", "telefon", "kulaklık", "hoparlör", "tv", "kamera", "ssd", "usb", "bellek", "ekran koruyucu", "şarj", "batarya", "kumanda", "uydu", "kablo", "mouse", "klavye","elektrikli ev aletleri","ocak","davlumbaz","beyaz eşya","elektronik","ev elektroniği"],
-        "Spor & Outdoor": ["futbol", "bisiklet", "kamp", "fitness", "dambıl", "scooter", "spor", "olta", "mat", "pompa", "raket", "voleybol", "fener", "dalış"],
-        "Süpermarket & Gıda": ["kakao", "kahve", "zeytin", "peynir", "atıştırmalık", "çikolata", "bisküvi", "içecek", "su", "baharat", "zeytinyağı", "gıda", "deterjan","baharat"]
+        "giyim_ayakkabi": ["t-shirt", "jean", "pantolon", "ceket", "mont", "sweatshirt", "gömlek", "kazak", "tayt", "bot", "sneaker", "terlik", "ayakkabı", "pijama", "forma", "eşofman", "çorap", "korse", "şal", "bone","elbise","giyim"],
+        "ev_yasam_mobilya": ["fırın", "tencere", "kahve makinesi", "su sebili", "ütü", "süpürge", "mobilya", "yatak", "havlu", "perde", "askılık", "dolap", "masa", "koltuk", "alez", "yastık", "ayna", "mutfak", "termos", "armatür", "sehpa","ev gereçleri","aydınlatma","yorgan","ev","teskstil"],
+        "kirtasiye_kitap_hobi": ["kalem", "defter", "boya", "oyun", "enstrüman", "kitap", "ofis", "nargile", "plak", "mızıka", "kalimba", "tuval", "düğme", "ip", "kağıt", "dosya", "kar küresi", "hediyelik","bijuteri","hobi",],
+        "kozmetik_kisisel_bakim": ["şampuan", "krem", "parfüm", "tıraş", "makyaj", "ruj", "cilt", "maskara", "oje", "fondöten", "manikür", "fırça", "parlatıcı", "deodorant", "diş", "bakım", "temizleme"],
+        "elektronik_teknoloji": ["tablet", "laptop", "bilgisayar", "telefon", "kulaklık", "hoparlör", "tv", "kamera", "ssd", "usb", "bellek", "ekran koruyucu", "şarj", "batarya", "kumanda", "uydu", "kablo", "mouse", "klavye","elektrikli ev aletleri","ocak","davlumbaz","beyaz eşya","elektronik","ev elektroniği"],
+        "spor_outdoor": ["futbol", "bisiklet", "kamp", "fitness", "dambıl", "scooter", "spor", "olta", "mat", "pompa", "raket", "voleybol", "fener", "dalış"],
+        "supermarket_gida": ["kakao", "kahve", "zeytin", "peynir", "atıştırmalık", "çikolata", "bisküvi", "içecek", "su", "baharat", "zeytinyağı", "gıda", "deterjan","baharat"]
     }
 
     skorlar = {g: 0 for g in gruplar.keys()}
@@ -156,4 +160,30 @@ def kategori_grupla(ham_liste):
                     skorlar[grup] += agirlik
 
     max_skor = max(skorlar.values())
-    return max(skorlar, key=skorlar.get) if max_skor > 0 else "Diğer"
+    return max(skorlar, key=skorlar.get) if max_skor > 0 else "diger"
+
+def yorumlara_puan_ver(classifier, yorum_paketleri):
+    if not yorum_paketleri:
+        logger.warning("tahmin yapılacak yorum bulunamadı, boş liste döndürülüyor.")
+        return []
+
+    texts = [yorum.get("clean_text", '') for yorum in yorum_paketleri]
+
+    logger.info(f"MODEL {len(texts)} yorum için tahmin yapıyor...")
+    results = classifier(texts, batch_size=32, truncation=True, max_length=512)
+
+    for i in range(len(yorum_paketleri)):
+        try:
+            raw_label = results[i]['label']
+            score = int(raw_label.split('_')[1]) + 1
+
+            yorum_paketleri[i]['predicted_score'] = score
+        except Exception as e:
+            logger.error(f"Yorum puanlama hatası: {e}. Yorum: {yorum_paketleri[i]}")
+            yorum_paketleri[i]['predicted_score'] = 0  # Hata durumunda puanı 0 yaparak devam ediyoruz
+
+    test_scores = [y.get('predicted_score') for y in yorum_paketleri[:3]]
+    logger.info(f"Örnek tahmin skorları: {test_scores} (ilk 3 yorum)")
+
+    return yorum_paketleri
+
