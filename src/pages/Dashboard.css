@@ -1,0 +1,848 @@
+/* Dashboard.css - Tam ve Eksiksiz Final Sürümü */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #05040f;
+    font-family: 'Inter', sans-serif;
+    color: #f1f0ff;
+    min-height: 100vh;
+}
+
+/* ── ARKA PLAN ── */
+.vivid-main-page {
+    position: relative;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 50%, #1e1842 0%, #05040f 100%);
+    background-attachment: fixed;
+    z-index: 1;
+}
+
+.bg-animation-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    animation: move 20s infinite alternate;
+}
+
+.blob.blue {
+    top: -100px;
+    left: -100px;
+    background: #8b5cf6;
+}
+
+.blob.pink {
+    bottom: -100px;
+    right: -100px;
+    background: #ec4899;
+}
+
+@keyframes move {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(150px, 100px);
+    }
+}
+
+.grid-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* ── NAV ── */
+.vivid-top-nav {
+    padding: 16px 0;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(5, 4, 15, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-glow-capsule {
+    width: 95%;
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vivid-brand {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-icon-wrap {
+    width: 34px;
+    height: 34px;
+    background: var(--purple);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vivid-brand span {
+    color: var(--purple-light);
+}
+
+.vivid-menu {
+    display: flex;
+    gap: 4px;
+}
+
+.menu-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 7px 14px;
+    border-radius: 8px;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.menu-link:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.menu-link.active {
+    background: var(--purple-glow);
+    color: var(--purple-light);
+    border: 1px solid var(--border-purple);
+}
+
+.vivid-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-name-display {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.user-avatar-circle {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+}
+
+.vivid-btn-exit {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .2s;
+}
+
+.vivid-btn-exit:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── HERO ── */
+.vivid-hero-section {
+    padding: 48px 40px 32px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.hero-text h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.hero-text h1 span {
+    color: var(--purple-light);
+}
+
+.hero-text p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.stat-box .s-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--purple-light);
+}
+
+.stat-box .s-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* ── SEARCH ── */
+.search-glow-wrap {
+    margin-top: 28px;
+}
+
+.search-inner-box {
+    width: 100%;
+    /* Arka planı biraz daha koyu ve opak yapıyoruz (0.75 -> 0.9) */
+    background: rgba(10, 8, 25, 0.95);
+    /* Kenarlığı daha kalın ve belirgin yapıyoruz */
+    border: 2px solid var(--purple);
+    border-radius: 14px;
+    padding: 6px 6px 6px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    /* Arama kutusuna derinlik katan bir gölge ekliyoruz */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5),
+        0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+.search-inner-box:focus-within {
+    /* Odaklanınca daha parlak bir kutu */
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3);
+    background: rgba(15, 12, 35, 0.98);
+}
+
+.search-icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.search-input-field {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 15px;
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+}
+
+.search-input-field::placeholder {
+    color: var(--text-muted);
+}
+
+.search-action-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    padding: 0 22px;
+    height: 44px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .2s;
+}
+
+.search-action-btn:hover {
+    background: var(--purple-dark);
+}
+
+/* ── FLOW STEPS ── */
+.flow-steps-row {
+    display: flex;
+    align-items: center;
+    margin-top: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 32px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.flow-step-unit {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.flow-icon-box {
+    width: 44px;
+    height: 44px;
+    background: var(--purple-glow);
+    border: 1px solid var(--border-purple);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--purple-light);
+    flex-shrink: 0;
+}
+
+.flow-text .flow-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.flow-text .flow-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.flow-arrow {
+    color: var(--text-muted);
+    margin: 0 24px;
+    flex-shrink: 0;
+}
+
+/* ── CATEGORY ROW ── */
+.cat-section {
+    padding: 28px 40px 0;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.cat-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+}
+
+.cat-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    /* Flexbox taşma sorununu önlemek için genişlik ayarı */
+    width: 100%;
+}
+
+.cat-row::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-pill {
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.cat-pill:hover {
+    border-color: var(--border-purple);
+    color: var(--text-primary);
+}
+
+.cat-pill.active {
+    background: var(--purple-glow);
+    color: var(--purple-light);
+    border-color: var(--border-purple);
+    font-weight: 600;
+}
+
+/* ── TAB BAR ── */
+/* Tab Bar'ı daha ferah hale getirdik */
+.tab-bar {
+    display: flex;
+    gap: 12px;
+    /* Butonlar arası boşluğu 2px'ten 12px'e çıkardık */
+    background: transparent;
+    /* Arka planı şeffaflaştırdık */
+    border: none;
+    margin: 28px 40px 0;
+    max-width: 1280px;
+    position: relative;
+    z-index: 5;
+}
+
+/* Butonlara kendi arka planlarını verdik */
+.tab-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 12px;
+    /* Köşeleri biraz daha yumuşattık */
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-card);
+    /* Her buton kendi kutusu içinde dursun */
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    backdrop-filter: blur(12px);
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--purple-glow);
+    background: var(--bg-hover);
+}
+
+.tab-btn.active {
+    background: var(--purple-glow);
+    color: var(--purple-light);
+    border: 1px solid var(--border-purple);
+}
+
+/* ── SECTION ── */
+.vivid-section {
+    padding: 28px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.section-heading {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    /* Flexbox taşma sorununu önlemek için genişlik ayarı */
+    width: 100%;
+}
+
+.card-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── TREND PILLS ── */
+.trend-pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.trend-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    transition: border-color .2s;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.trend-pill:hover {
+    border-color: var(--border-purple);
+}
+
+.trend-pill .rank {
+    color: var(--purple-light);
+    font-weight: 800;
+    font-size: 12px;
+    min-width: 20px;
+}
+
+.trend-pill .t-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.trend-pill .count {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-hover);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* ── HISTORY PILL ── */
+.history-pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.history-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.history-pill:hover {
+    border-color: var(--border-purple);
+    color: var(--text-primary);
+}
+
+/* ── TREND ROW ── */
+.trend-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    transition: border-color .2s;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.trend-row:hover {
+    border-color: var(--border-purple);
+}
+
+.trend-row .t-rank {
+    color: var(--purple-light);
+    font-weight: 800;
+    font-size: 16px;
+    min-width: 32px;
+}
+
+.trend-row .t-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.trend-row .t-badge {
+    background: var(--purple-glow);
+    border: 1px solid var(--border-purple);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--purple-light);
+    font-weight: 600;
+}
+
+.trend-bar-wrap {
+    width: 100px;
+    height: 4px;
+    background: var(--bg-hover);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.trend-bar {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 100px;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 2;
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    background: var(--bg-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.empty-state svg {
+    margin-bottom: 12px;
+    opacity: 0.4;
+}
+
+/* ── MAIN WRAPPER ── */
+.vivid-main-page {
+    min-height: 100vh;
+    background: transparent;
+    /* Arka plandaki gradyanın görünmesi için şeffaf */
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulse-dot {
+    transform-origin: center;
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* --- YENİ LOGO VE SLOGAN TASARIMI --- */
+.vivid-brand-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.vivid-logo-box {
+    width: 44px;
+    height: 44px;
+    background: #111018;
+    /* Hafif siyah/koyu morumsu kutu arka planı */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.vivid-title-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.vivid-brand-text {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+/* AI yazısındaki parlak pembe-mor geçiş efekti */
+.ai-glow-text {
+    background: linear-gradient(90deg, hsl(219, 59%, 61%) 0%, hsl(309, 85%, 39%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 0px 15px #4c7de566;
+}
+
+.vivid-brand-slogan {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulse-dot {
+    transform-origin: center;
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.hero-text h1 {
+    font-size: 52px;
+    /* 32px'ten 52px'e çıkardık */
+    font-weight: 800;
+    letter-spacing: -2px;
+    /* Harfleri biraz daha birbirine yaklaştırdık (daha modern durur) */
+    line-height: 1.1;
+    margin-bottom: 16px;
+
+    /* GRADIENT YAZI EFEKTİ */
+    background: linear-gradient(90deg, #ffffff 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* "Hoş Geldin" kısmını ayrı bir renkle vurgulamak istersen */
+.hero-text h1 span {
+    display: block;
+    /* Alt satıra geçmesini sağlar */
+    background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Kullanıcı Profili ve Çıkış Butonu */
+.vivid-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    /* Boşluğu artırdık */
+    background: rgba(22, 19, 50, 0.4);
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.user-name-display {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.user-avatar-circle {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    /* Mor-Pembe geçişli avatar */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.vivid-btn-exit {
+    background: rgba(239, 68, 68, 0.05);
+    /* Çok hafif kırmızı arka plan */
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    /* Daha parlak, soft kırmızı */
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.vivid-btn-exit:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #fff;
+    transform: translateY(-1px);
+    /* Hafif yukarı zıplama efekti */
+}
