@@ -164,7 +164,7 @@ def kategori_grupla(ham_liste):
 
 def yorumlara_puan_ver(classifier, yorum_paketleri):
     if not yorum_paketleri:
-        logger.warning("tahmin yapılacak yorum bulunamadı, boş liste döndürülüyor.")
+        logger.warning("tahmin yapılacak yorum bulunamadı, boş liste dönd3ürülüyor.")
         return []
 
     texts = [yorum.get("clean_text", '') for yorum in yorum_paketleri]
