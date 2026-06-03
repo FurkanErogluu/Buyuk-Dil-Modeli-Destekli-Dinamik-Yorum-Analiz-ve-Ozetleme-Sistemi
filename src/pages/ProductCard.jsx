@@ -12,7 +12,7 @@ export const getPlatformColor = (platName) => {
     if (str.includes('google')) return '#34a853';
     if (str.includes('airbnb')) return '#ff5a5f';
     if (str.includes('hepsiburada')) return '#ff6000';
-    if (str.includes('steam')) return '#66c0f4';
+    if (str.includes('steam')) return '#14396e';
     if (str.includes('etstur')) return '#0ea5e9';
     if (str.includes('çiçeksepeti') || str.includes('ciceksepeti')) return '#16a34a';
     return '#8b5cf6';

@@ -102,7 +102,7 @@ function Home() {
                             </span>
                         </h1>
                         <p className="hero-text text-left">
-                            Tüm platformlardaki kullanıcı yorumlarını analiz ederek
+                            Çeşitli platformlardaki kullanıcı yorumlarını analiz ederek
                             gerçek içgörülere ulaşın. LLM desteğiyle veriyi sadece okumayın, hissedin.
                         </p>
                         <div className="hero-actions justify-left">
@@ -111,20 +111,7 @@ function Home() {
                             </Link>
                         </div>
 
-                        <div className="login-stats stats-inline">
-                            <div className="login-stat">
-                                <strong>1M+</strong>
-                                <span>Yorum</span>
-                            </div>
-                            <div className="login-stat">
-                                <strong>50K+</strong>
-                                <span>Kullanıcı</span>
-                            </div>
-                            <div className="login-stat">
-                                <strong>98%</strong>
-                                <span>Doğruluk</span>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className="hero-visual-right">
@@ -165,7 +152,7 @@ function Home() {
 
                 <section id="trends" className="product-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div className="section-head">
-                        <div className="section-tag">Popüler Analizler</div>
+
                         <h2>Platform Bazlı Özetler</h2>
                     </div>
                     <div className="product-grid" style={{ justifyContent: 'center', width: '100%' }}>
