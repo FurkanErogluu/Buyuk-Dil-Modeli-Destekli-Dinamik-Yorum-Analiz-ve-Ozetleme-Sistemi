@@ -95,6 +95,34 @@ namespace LLM_Destekli_Ozetleme.Services
                 RefreshToken = newRefreshToken 
             };
         }
+        public async Task<AuthResult> LogoutAsync(Guid userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return new AuthResult { Success = false, Message = "Kullanıcı bulunamadı." };
+            }
+
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = null;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return new AuthResult { Success = true, Message = "Çıkış başarılı." };
+        }
+
+        public async Task<UserProfileDto?> GetUserProfileAsync(Guid userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return null;
+            
+            return new UserProfileDto
+            {
+                Id = user.Id,
+                Username = user.Username ?? string.Empty,
+                Email = user.Email ?? string.Empty
+            };
+        }
         private string CreateAccessToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

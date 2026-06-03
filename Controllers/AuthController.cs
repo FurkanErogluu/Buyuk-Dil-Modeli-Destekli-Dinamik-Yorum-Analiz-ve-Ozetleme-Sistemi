@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using LLM_Destekli_Ozetleme.Models.DTOs;
 using LLM_Destekli_Ozetleme.Services; 
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace LLM_Destekli_Ozetleme.Controllers
@@ -54,6 +55,37 @@ namespace LLM_Destekli_Ozetleme.Controllers
                 accessToken = result.AccessToken,
                 refreshToken = result.RefreshToken
             });  
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _authService.LogoutAsync(Guid.Parse(userIdClaim.Value));
+            if (!result.Success) return BadRequest(result.Message);
+            return Ok(new { message = result.Message });
+
+        }
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var userProfile = await _authService.GetUserProfileAsync(Guid.Parse(userIdClaim.Value));
+            if (userProfile == null) return NotFound("Kullanıcı bulunamadı.");
+
+            return Ok(userProfile);
         }
     }
 }

@@ -1,15 +1,13 @@
 using LLM_Destekli_Ozetleme.Data;
 using LLM_Destekli_Ozetleme.Services;
+using LLM_Destekli_Ozetleme.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; // Kritik namespace
-<<<<<<< HEAD
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-=======
-using LLM_Destekli_Ozetleme.Repositories;
->>>>>>> backend
 
 var builder = WebApplication.CreateBuilder(args);
 // PostgreSQL için evrensel DateTime UTC eşlemesini aktif ediyoruz

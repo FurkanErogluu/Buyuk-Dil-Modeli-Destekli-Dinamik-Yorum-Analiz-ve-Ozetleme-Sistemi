@@ -51,6 +51,24 @@ namespace LLM_Destekli_Ozetleme.Services
             return (true, "Başarılı", projectedReviews.Count, projectedReviews);
         }
 
+        public async Task<List<ProductListDto>> GetProductsAsync(ProductQueryParameters queryParams)
+        {
+            var products = await _productRepository.GetProductsAsync(queryParams);
+
+            var productListDtos = products.Select(p => new ProductListDto
+            {
+                Id = p.Id,
+                Name = p.ProductName,
+                Category = p.Category ?? "Diğer",
+                AverageRating = p.AvgOrjScore,
+                ModelScore = p.AvgModelScore,
+                ClickCount = p.ClickCount ?? 0,
+                ImageUrl = p.ImageUrl
+            }).ToList();
+
+            return productListDtos;
+        }
+
         public async Task<(bool NeedsRescrape, double MonthsPassed, string Message)> CheckProductStatusAsync(Guid productId)
         {
             var product = await _productRepository.GetByIdAsync(productId);
