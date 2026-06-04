@@ -1,36 +1,24 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
-    ArrowLeft,
-    Heart,
-    Star,
-    ExternalLink,
-    ChevronDown,
-    ChevronUp,
-    ShieldCheck,
-    CheckCircle2,
-    Clock,
-    ThumbsUp,
-    MessageSquare,
-    Sparkles,
-    CheckCircle,
-    Info,
-    TrendingUp
+    ArrowLeft, Heart, Star, ChevronDown, ChevronUp, ShieldCheck, CheckCircle2,
+    Clock, ThumbsUp, Sparkles, CheckCircle, Info, TrendingUp,
+    MessageCircle, X, Send, Bot, MoreHorizontal
 } from 'lucide-react';
 import './ProductPage.css';
 import ProductCard from './ProductCard';
 
 // ── DİNAMİK GERÇEK PLATFORM RENK HARİTASI ──
 const PLATFORM_THEMES = {
-    'trendyol': { main: '#F27A1A', light: '#fff4eb' },      // Trendyol Turuncusu
-    'trendyolgo': { main: '#0cc167', light: '#e8faef' },    // Trendyol Go Turuncusu
-    'yemeksepeti': { main: '#EA004B', light: '#ffeef3' },   // Yemeksepeti Pembesi
-    'googlemaps': { main: '#4285F4', light: '#e8f0fe' },   // Google Yeşili
-    'airbnb': { main: '#FF5A5F', light: '#ffeeef' },        // Airbnb Kırmızı/Mercan
-    'hepsiburada': { main: '#FF6000', light: '#fff4eb' },   // Hepsiburada Turuncusu
-    'steam': { main: '#2A475E', light: '#f1f5f9' },         // Steam Laciverti
-    'etstur': { main: '#009FDF', light: '#f0f9ff' },        // Etstur Turkuaz
-    'ciceksepeti': { main: '#028139', light: '#f0fdf4' },   // Çiçeksepeti Yeşili
-    'default': { main: '#8b5cf6', light: '#f5f3ff' }        // VividAI Moru
+    'trendyol': { main: '#F27A1A', light: '#fff4eb' },
+    'trendyolgo': { main: '#0cc167', light: '#e8faef' },
+    'yemeksepeti': { main: '#EA004B', light: '#ffeef3' },
+    'googlemaps': { main: '#4285F4', light: '#e8f0fe' },
+    'airbnb': { main: '#FF5A5F', light: '#ffeeef' },
+    'hepsiburada': { main: '#FF6000', light: '#fff4eb' },
+    'steam': { main: '#2A475E', light: '#f1f5f9' },
+    'etstur': { main: '#009FDF', light: '#f0f9ff' },
+    'ciceksepeti': { main: '#028139', light: '#f0fdf4' },
+    'default': { main: '#8b5cf6', light: '#f5f3ff' }
 };
 
 const CATEGORY_DETAILS = {
@@ -50,17 +38,23 @@ const CATEGORY_DETAILS = {
     ]
 };
 
+// Ürünün tüm yorumlarını barındıran veri kaynağı
 const MOCK_XAI_COMMENTS = {
     1: [
-        { id: 101, user: "Ahmet K.", date: "12.05.2026", sentiment: "positive", text: "Hayatımda gördüğüm en iyi gürültü engelleme teknolojisine sahip. Müzik dinlerken ses kalitesi muazzam berrak." },
-        { id: 102, user: "Zeynep T.", date: "02.05.2026", sentiment: "negative", text: "Ses harika ancak uzun kullanımda kulaklarımda ağrı yaptı. Konfor ve ergonomi bence zayıf." }
+        { id: 101, user: "Ah*** K***", text: "Hayatımda gördüğüm en iyi gürültü engelleme teknolojisine sahip. Müzik dinlerken ses kalitesi muazzam berrak." },
+        { id: 102, user: "Ze*** T***", text: "Ses harika ancak uzun kullanımda kulaklarımda ağrı yaptı. Konfor ve ergonomi bence zayıf." },
+        { id: 103, user: "Ca*** M***", text: "Fiyatına göre inanılmaz bir konfor sunuyor, kesinlikle öneririm." },
+        { id: 104, user: "Bu*** S***", text: "Ses dengesi mükemmel, baslar ve tizler birbirine karışmıyor." }
     ],
     3: [
-        { id: 301, user: "Selin B.", date: "29.04.2026", sentiment: "positive", text: "Burger köftesi sıcacık geldi. Gerçekten tam bir lezzet şöleni, porsiyon büyüklüğü çok tatmin edici." },
-        { id: 302, user: "Berk G.", date: "18.04.2026", sentiment: "negative", text: "Yemek tam 1 saatte ulaştı. Teslimat süresi ve hız performansı korkunç derecede yavaş." }
+        { id: 301, user: "Se*** B***", text: "Burger köftesi sıcacık geldi. Gerçekten tam bir lezzet şöleni, porsiyon büyüklüğü çok tatmin edici." },
+        { id: 302, user: "Be*** G***", text: "Yemek tam 1 saatte ulaştı. Teslimat süresi ve hız performansı korkunç derecede yavaş." },
+        { id: 303, user: "Oğ*** D***", text: "Lezzet harikaydı, kurye de çok kibardı. Teşekkürler." }
     ],
     'default': [
-        { id: 901, user: "Kullanıcı A.", date: "01.05.2026", sentiment: "positive", text: "Genel olarak performansı çok iyi ve kalitesi yüksek, kesinlikle tavsiye ederim." }
+        { id: 901, user: "Ku*** A***", text: "Genel olarak performansı çok iyi ve kalitesi yüksek, kesinlikle tavsiye ederim. Havuz ve çocuklu aileler için harika." },
+        { id: 902, user: "Ku*** B***", text: "Kargo hızı harika, ürün beklediğimden de iyi çıktı." },
+        { id: 903, user: "Ku*** C***", text: "Açık büfe yemek çeşitliliği zengin ama odalar biraz küçüktü." }
     ]
 };
 
@@ -70,9 +64,23 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
     const [selectedWord, setSelectedWord] = useState(null);
     const [hoveredWord, setHoveredWord] = useState(null);
 
+    // Chatbot States
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
+    const [chatMessages, setChatMessages] = useState([
+        { sender: 'ai', text: `Merhaba! Ben VividAI Asistan. 👋 ${product?.name} hakkında merak ettiklerini bana sorabilirsin.` }
+    ]);
+    const [chatInput, setChatInput] = useState('');
+    const chatEndRef = useRef(null);
+
+    useEffect(() => {
+        if (isChatOpen && chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatMessages, isChatOpen, isTyping]);
+
     if (!product) return null;
 
-    // ── PLATFORM TESPİT ALGORTİMASI ──
     const getPlatformTheme = (platName) => {
         if (!platName) return PLATFORM_THEMES['default'];
         const str = platName.toLowerCase().replace(/\s+/g, '');
@@ -90,8 +98,9 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
 
     const activeTheme = getPlatformTheme(product.plat);
 
+    // Gereksiz/etkisiz kelimeleri filtreleme
     const cleanToken = (word) => word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
-    const isStopWord = (word) => ['ve', 'veya', 'da', 'de', 'bir', 'bu', 'tarafından', 'için', 'en', 'ile', 'o', 'ise', 'içinde'].includes(cleanToken(word));
+    const isStopWord = (word) => ['ve', 'veya', 'da', 'de', 'bir', 'bu', 'için', 'en', 'ile', 'o', 'ise', 'içinde', 'çok', 'daha', 'gibi'].includes(cleanToken(word));
 
     const aiModelScore = useMemo(() => (product.avgScore - 0.2).toFixed(1), [product.avgScore]);
     const varianceScore = useMemo(() => {
@@ -106,15 +115,9 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
     }, [allProducts, product.category, product.id]);
 
     const params = CATEGORY_DETAILS[product.category] || CATEGORY_DETAILS.default;
-    const comments = MOCK_XAI_COMMENTS[product.id] || MOCK_XAI_COMMENTS.default;
+    // Sağ tarafta her zaman GÖRÜNECEK kaynak yorumların tamamı
+    const sourceComments = MOCK_XAI_COMMENTS[product.id] || MOCK_XAI_COMMENTS.default;
     const summaryWords = useMemo(() => product.sum.split(/\s+/), [product.sum]);
-
-    const filteredComments = useMemo(() => {
-        if (!selectedWord) return comments;
-        return comments.filter(comment =>
-            comment.text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").split(/\s+/).includes(selectedWord)
-        );
-    }, [selectedWord, comments]);
 
     const handleWordClick = (word) => {
         const clean = cleanToken(word);
@@ -122,7 +125,27 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
         setSelectedWord(selectedWord === clean ? null : clean);
     };
 
-    const renderInteractiveWords = (textArray) => {
+    // Chatbot Mesaj Gönderimi
+    const handleSendMessage = (e) => {
+        e.preventDefault();
+        if (!chatInput.trim()) return;
+
+        const newUserMsg = { sender: 'user', text: chatInput };
+        setChatMessages(prev => [...prev, newUserMsg]);
+        setChatInput('');
+        setIsTyping(true);
+
+        setTimeout(() => {
+            setIsTyping(false);
+            setChatMessages(prev => [...prev, {
+                sender: 'ai',
+                text: `Analizlerimize göre "${newUserMsg.text}" konusunda kullanıcılar genel olarak olumlu bir eğilim gösteriyor.`
+            }]);
+        }, 1500);
+    };
+
+    // SOL TARAF (ÖZET) İÇİN KELİME RENDER FONKSİYONU
+    const renderInteractiveSummary = (textArray) => {
         return textArray.map((word, idx) => {
             const clean = cleanToken(word);
             const stopWord = isStopWord(word);
@@ -143,8 +166,24 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
         });
     };
 
+    // SAĞ TARAFTAKİ YORUMLAR İÇİNDE METNİ VURGULAMA FONKSİYONU
+    const renderHighlightedCommentText = (text, targetWord) => {
+        if (!targetWord) return text;
+
+        // Cümledeki hedef kelimeyi büyük/küçük harf duyarsız bul ve böl
+        const regex = new RegExp(`(${targetWord})`, 'gi');
+        const parts = text.split(regex);
+
+        return parts.map((part, i) =>
+            part.toLowerCase() === targetWord.toLowerCase() ?
+                <span key={i} className="tc-word-highlight-match">{part}</span> : part
+        );
+    };
+
+    // Şu anda aktif olan (hover edilen veya tıklanan) kelime
+    const activeTargetWord = hoveredWord || selectedWord;
+
     return (
-        // CSS Değişkenlerini (Variables) En Üst Kapsayıcıya Enjekte Ediyoruz
         <div
             className="tc-page-wrapper"
             style={{
@@ -152,7 +191,6 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                 '--theme-light': activeTheme.light
             }}
         >
-            {/* ÜST BİLGİ ÇUBUĞU */}
             <div className="tc-top-bar">
                 <button className="tc-back-btn" onClick={onClose}>
                     <ArrowLeft size={16} /> Keşif Paneline Dön
@@ -162,10 +200,9 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                 </div>
             </div>
 
-            {/* ANA 3'LÜ YERLEŞİM */}
             <div className="tc-main-grid">
 
-                {/* 1. SOL: TEK RESİM */}
+                {/* 1. SOL: RESİM & AI ÖZETİ */}
                 <div className="tc-image-column">
                     <div className="tc-main-image-box">
                         <img src={product.img} alt={product.name} />
@@ -173,9 +210,22 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                             <span className="tc-badge-ai">VividAI Analizör</span>
                         </div>
                     </div>
+
+                    <div className="tc-ai-summary-box">
+                        <div className="tc-ai-summary-header">
+                            <Sparkles size={16} color={activeTheme.main} />
+                            <strong>{product.plat} Verisi Sentez Raporu</strong>
+                        </div>
+                        <p className="tc-interactive-text">
+                            {renderInteractiveSummary(summaryWords)}
+                        </p>
+                        <div className="tc-summary-hint">
+                            * Özetteki kelimelerin hangi yorumlardan geldiğini görmek için kelimelere tıklayın veya üzerine gelin.
+                        </div>
+                    </div>
                 </div>
 
-                {/* 2. ORTA: DETAYLAR */}
+                {/* 2. ORTA: DETAYLAR & KAYNAK YORUMLAR KUTUSU */}
                 <div className="tc-details-column">
                     <div className="tc-product-header">
                         <h1 className="tc-product-title">
@@ -183,11 +233,9 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                         </h1>
                         <div className="tc-rating-summary">
                             <div className="tc-stars">
-                                <Star size={14} fill={activeTheme.main} color={activeTheme.main} />
-                                <Star size={14} fill={activeTheme.main} color={activeTheme.main} />
-                                <Star size={14} fill={activeTheme.main} color={activeTheme.main} />
-                                <Star size={14} fill={activeTheme.main} color={activeTheme.main} />
-                                <Star size={14} fill={activeTheme.main} color={activeTheme.main} />
+                                {[...Array(5)].map((_, i) => (
+                                    <Star key={i} size={14} fill={activeTheme.main} color={activeTheme.main} />
+                                ))}
                             </div>
                             <span className="tc-rating-count">Platform Puanı: {product.avgScore}</span>
                         </div>
@@ -214,7 +262,6 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                         </div>
                     </div>
 
-                    {/* KATEGORİK ÖZET DETAYLARI */}
                     <div className="tc-specs-section">
                         <div className="tc-specs-title-group">
                             <TrendingUp size={16} color={activeTheme.main} />
@@ -250,41 +297,42 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                         </div>
                     </div>
 
-                    {/* AI Sentez Özeti */}
-                    <div className="tc-ai-summary-box">
-                        <div className="tc-ai-summary-header">
-                            <Sparkles size={16} color={activeTheme.main} />
-                            <strong>{product.plat} Verisi Sentez Raporu</strong>
-                        </div>
-                        <p className="tc-interactive-text">
-                            {renderInteractiveWords(summaryWords)}
-                        </p>
-                    </div>
-
-                    {/* Yorumlar */}
+                    {/* VURGULAMA VE HARİTALAMA (HIGHLIGHT) YAPILAN YORUM KUTUSU */}
                     <div className="tc-reviews-section">
-                        <h3 className="tc-section-title">Duygu Yoğunluklu Değerlendirmeler ({filteredComments.length})</h3>
-                        {selectedWord && (
-                            <div className="tc-filter-alert">
-                                <strong>"{selectedWord}"</strong> kelimesini içeren kaynak veri yorumları filtrelendi.
-                            </div>
-                        )}
-                        <div className="tc-reviews-list">
-                            {filteredComments.map(review => {
-                                const commentWords = review.text.split(/\s+/);
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                            <h3 className="tc-section-title" style={{ margin: 0 }}>Özeti Oluşturan Kaynak Yorumlar</h3>
+                            {selectedWord && (
+                                <button className="tc-clear-filter" onClick={() => setSelectedWord(null)}>
+                                    Seçimi Temizle
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="tc-reviews-scroll-box">
+                            {sourceComments.map(review => {
+                                // Arama işlemini küçük harfe çevirerek yapıyoruz
+                                const textLower = review.text.toLocaleLowerCase('tr-TR');
+                                const targetLower = activeTargetWord ? activeTargetWord.toLocaleLowerCase('tr-TR') : '';
+
+                                // Yorumun içinde aktif kelime geçiyor mu?
+                                const isMatch = activeTargetWord && textLower.includes(targetLower);
+
+                                // Stil sınıfı ataması: Aktif kelime varsa ve yorum içeriyorsa öne çıkar, içermiyorsa soluklaştır.
+                                let cardStateClass = '';
+                                if (activeTargetWord) {
+                                    cardStateClass = isMatch ? 'tc-card-highlight' : 'tc-card-dimmed';
+                                }
+
                                 return (
-                                    <div key={review.id} className="tc-review-card">
-                                        <div className="tc-review-header">
-                                            <div className="tc-review-stars">
-                                                <Star size={12} fill={review.sentiment === 'positive' ? '#10b981' : '#ef4444'} color={review.sentiment === 'positive' ? '#10b981' : '#ef4444'} />
-                                                <span style={{ color: review.sentiment === 'positive' ? '#10b981' : '#ef4444', fontSize: '11px', fontWeight: 'bold', marginLeft: '4px', textTransform: 'uppercase' }}>
-                                                    {review.sentiment === 'positive' ? 'Pozitif Duygu' : 'Negatif Duygu'}
-                                                </span>
-                                            </div>
-                                            <span className="tc-review-user">{review.user} · {review.date}</span>
+                                    <div key={review.id} className={`tc-review-card-mini ${cardStateClass}`}>
+                                        <div className="tc-review-header-mini">
+                                            <span className="tc-review-user-masked">{review.user}</span>
                                         </div>
-                                        <p className="tc-interactive-text">
-                                            {renderInteractiveWords(commentWords)}
+                                        <p className="tc-interactive-text-mini">
+                                            {/* Eşleşme varsa kelimeyi sarı/tema rengi ile vurgula, yoksa düz metni bas */}
+                                            {activeTargetWord && isMatch
+                                                ? renderHighlightedCommentText(review.text, activeTargetWord)
+                                                : review.text}
                                         </p>
                                     </div>
                                 )
@@ -316,7 +364,6 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                         {isFav ? 'Koleksiyona Eklendi' : 'Koleksiyona Ekle'}
                     </button>
 
-                    {/* Değerlendirme Alanı */}
                     <div className="tc-rate-box">
                         <strong>Model Çıktısını Değerlendir</strong>
                         {userRating ? (
@@ -340,7 +387,9 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                 </div>
             </div>
 
-            {/* 4. ALT KISIM: BENZER ÜRÜNLER */}
+            {/* ========================================================= */}
+            {/* 4. ALT KISIM: BENZER ÜRÜNLER (YATAY SCROLL) */}
+            {/* ========================================================= */}
             <div className="tc-similar-section">
                 <h2 className="tc-similar-title">Kategorideki Benzer Ürünler</h2>
                 <div className="tc-similar-scroll-container">
@@ -360,6 +409,62 @@ function ProductPage({ product, isFav, onFav, onClose, userRating, onRate, allPr
                     ))}
                 </div>
             </div>
+
+            {/* CHATBOT FAB (Yüzen Buton) */}
+            <button className={`tc-chatbot-fab ${isChatOpen ? 'hidden' : ''}`} onClick={() => setIsChatOpen(true)}>
+                <Bot size={28} />
+            </button>
+
+            {/* MODAL PENCERESİ */}
+            <div className={`tc-chatbot-modal ${isChatOpen ? 'open' : ''}`}>
+                <div className="tc-chatbot-header">
+                    <div className="tc-chatbot-header-left">
+                        <div className="tc-bot-avatar-container">
+                            <Bot size={22} />
+                            <div className="tc-bot-online-dot"></div>
+                        </div>
+                        <div className="tc-chatbot-title-box">
+                            <span className="tc-chatbot-title">VividAI Asistan</span>
+                            <span className="tc-chatbot-subtitle">Sizin için burada</span>
+                        </div>
+                    </div>
+                    <button className="tc-chatbot-close" onClick={() => setIsChatOpen(false)}>
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <div className="tc-chatbot-body">
+                    <div className="tc-chat-disclaimer">
+                        Gerçek zamanlı AI analiz asistanı ile görüşüyorsunuz.
+                    </div>
+                    {chatMessages.map((msg, idx) => (
+                        <div key={idx} className={`tc-chat-bubble ${msg.sender}`}>
+                            {msg.text}
+                        </div>
+                    ))}
+
+                    {isTyping && (
+                        <div className="tc-chat-bubble ai typing">
+                            <MoreHorizontal size={20} className="tc-typing-icon" />
+                        </div>
+                    )}
+
+                    <div ref={chatEndRef} />
+                </div>
+
+                <form className="tc-chatbot-footer" onSubmit={handleSendMessage}>
+                    <input
+                        type="text"
+                        placeholder="Bir şeyler sorun..."
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                    />
+                    <button type="submit" disabled={!chatInput.trim()} className={chatInput.trim() ? 'active' : ''}>
+                        <Send size={18} />
+                    </button>
+                </form>
+            </div>
+
         </div>
     );
 }

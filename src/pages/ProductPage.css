@@ -1,11 +1,12 @@
-/* ── GENEL AYARLAR ── */
+/* =========================================================================
+   GENEL AYARLAR & LAYOUT (IZGARA)
+   ========================================================================= */
 .tc-page-wrapper {
     background-color: #f8fafc;
     min-height: 100vh;
     padding: 24px 4%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #1e293b;
-    /* CSS Variables (JS'den gelen dinamik renkler burada işlenir) */
     transition: all 0.3s ease;
 }
 
@@ -64,10 +65,13 @@
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
-/* ── 1. SOL: GÖRSEL ALANI ── */
+/* =========================================================================
+   1. SOL SÜTUN: GÖRSEL ALANI & SENTEZ ÖZETİ
+   ========================================================================= */
 .tc-image-column {
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 .tc-main-image-box {
@@ -94,7 +98,6 @@
     left: 12px;
 }
 
-/* Dinamik AI Rozeti */
 .tc-badge-ai {
     background: var(--theme-main);
     color: #fff;
@@ -105,7 +108,33 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* ── 2. ORTA: ÜRÜN BİLGİLERİ ── */
+.tc-ai-summary-box {
+    border: 1px solid var(--theme-light);
+    border-radius: 12px;
+    padding: 20px;
+    background: var(--theme-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.tc-ai-summary-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--theme-main);
+}
+
+.tc-summary-hint {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 12px;
+    font-style: italic;
+}
+
+/* =========================================================================
+   2. ORTA SÜTUN: ÜRÜN BİLGİLERİ, SKORLAR & YORUMLAR
+   ========================================================================= */
 .tc-details-column {
     display: flex;
     flex-direction: column;
@@ -126,7 +155,6 @@
     letter-spacing: -0.5px;
 }
 
-/* Dinamik Marka Adı Rengi */
 .tc-brand {
     font-weight: 800;
     color: var(--theme-main);
@@ -149,7 +177,7 @@
     font-weight: 500;
 }
 
-/* Skor Kutuları */
+/* ── SKOR KUTULARI ── */
 .tc-score-cards-row {
     display: flex;
     gap: 16px;
@@ -169,7 +197,6 @@
     gap: 14px;
 }
 
-/* ── GÜNCELLENEN KISIM: TAŞMA ENGELLEYİCİ DİNAMİK SKOR KUTULARI ── */
 .tc-score-val {
     background: var(--theme-main);
     color: #fff;
@@ -182,7 +209,6 @@
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    /* Yüzde işaretinin alt satıra düşmesini engeller */
 }
 
 .tc-score-val-alt {
@@ -197,7 +223,6 @@
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    /* Alt satıra kırılmayı engeller */
 }
 
 .tc-score-labels {
@@ -215,7 +240,7 @@
     color: #64748b;
 }
 
-/* Kategorik Parametreler */
+/* ── KATEGORİK PARAMETRELER (AKORDİYON) ── */
 .tc-specs-section {
     display: flex;
     flex-direction: column;
@@ -248,7 +273,6 @@
     background: #f1f5f9;
 }
 
-/* Dinamik Akordiyon Çerçeve Rengi */
 .tc-param-row-wrapper.active-row {
     border-color: var(--theme-main);
     background: var(--theme-light);
@@ -269,7 +293,6 @@
     gap: 12px;
 }
 
-/* Dinamik İkon Rengi */
 .tc-icon-frame {
     color: var(--theme-main);
     display: flex;
@@ -296,7 +319,6 @@
     overflow: hidden;
 }
 
-/* Dinamik İlerleme Çubuğu Rengi */
 .tc-progress-fill {
     height: 100%;
     background: var(--theme-main);
@@ -317,63 +339,120 @@
     background: rgba(0, 0, 0, 0.01);
 }
 
-/* AI Sentez Özeti */
-.tc-ai-summary-box {
-    border: 1px solid var(--theme-light);
+/* =========================================================================
+   KAYNAK YORUMLAR & HARİTALAMA (HIGHLIGHT / DIMMED EFEKTLERİ)
+   ========================================================================= */
+
+.tc-reviews-section {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tc-clear-filter {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tc-clear-filter:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.tc-reviews-scroll-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 20px;
-    background: var(--theme-light);
-}
-
-.tc-ai-summary-header {
+    padding: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: var(--theme-main);
 }
 
-/* Yorumlar */
-.tc-filter-alert {
-    background: #eff6ff;
-    color: #2563eb;
-    padding: 10px 14px;
+.tc-reviews-scroll-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tc-reviews-scroll-box::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* Varsayılan Yorum Kartı (Normal Metin Akışı) */
+.tc-review-card-mini {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 12px 14px;
     border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 16px;
-    border: 1px solid #dbeafe;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.tc-review-card {
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 16px;
-    margin-bottom: 12px;
+/* KELİME SEÇİLDİĞİNDE EŞLEŞEN YORUMUN PARLAMASI (HIGHLIGHT) */
+.tc-card-highlight {
+    border-color: var(--theme-main);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: scale(1.02) translateX(2px);
+    background: #fff;
+    z-index: 2;
+    position: relative;
 }
 
-.tc-review-card:last-child {
-    border-bottom: none;
+/* KELİME SEÇİLDİĞİNDE EŞLEŞMEYEN YORUMUN SOLUKLAŞMASI (DIMMED) */
+.tc-card-dimmed {
+    opacity: 0.35;
+    transform: scale(0.98);
+    filter: grayscale(80%);
+    pointer-events: none;
 }
 
-.tc-review-card-header {
+.tc-review-header-mini {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-start;
     margin-bottom: 8px;
 }
 
-.tc-review-stars {
-    display: flex;
-    align-items: center;
+.tc-review-user-masked {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
 }
 
-.tc-review-user {
-    font-size: 12px;
-    color: #94a3b8;
-    font-weight: 500;
+/* Sağdaki Yorum Kutusu Metni - Normal Akış */
+.tc-interactive-text-mini {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #334155;
+    margin: 0;
 }
 
-/* ≡≡ DİNAMİK İNTERAKTİF KELİMELER (Platform Rengine Uyumlu) ≡≡ */
+/* SAĞDAKİ YORUM METNİNİN İÇİNDE EŞLEŞEN KELİMENİN FOSFORLU GİBİ PARLAMASI */
+.tc-word-highlight-match {
+    background-color: var(--theme-main);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Soldaki Özet Metni (İnteraktif) */
 .tc-interactive-text {
     font-size: 14px;
     line-height: 1.6;
@@ -410,7 +489,9 @@
     color: #64748b;
 }
 
-/* ── 3. SAĞ: SATICI & BUTONLAR ── */
+/* =========================================================================
+   3. SAĞ SÜTUN: SATICI & AKSİYON BUTONLARI
+   ========================================================================= */
 .tc-action-column {
     display: flex;
     flex-direction: column;
@@ -460,7 +541,7 @@
     line-height: 1.4;
 }
 
-/* Dinamik Ana Buton (Platform Marka Rengi) */
+/* Aksiyon Butonları */
 .tc-btn-primary {
     background: var(--theme-main);
     color: #fff;
@@ -502,13 +583,13 @@
     background: #f8fafc;
 }
 
-/* Dinamik İkincil Buton (Favori) */
 .tc-btn-secondary.fav-active {
     border-color: var(--theme-main);
     color: var(--theme-main);
     background: var(--theme-light);
 }
 
+/* Değerlendirme (Yıldız) Kutusu */
 .tc-rate-box {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -536,7 +617,9 @@
     font-weight: 700;
 }
 
-/* ── 4. ALT KISIM: BENZER ÜRÜNLER (YATAY SCROLL) ── */
+/* =========================================================================
+   4. ALT KISIM: BENZER ÜRÜNLER (YATAY SCROLL)
+   ========================================================================= */
 .tc-similar-section {
     max-width: 1240px;
     margin: 40px auto 0 auto;
@@ -571,17 +654,6 @@
 .tc-similar-card-wrapper {
     min-width: 190px;
     flex-shrink: 0;
-
-    /* ── KARTLARA AYDINLIK OLMA EMRİ ── */
-    --card-bg: #ffffff;
-    --card-border: #e2e8f0;
-    --card-text: #0f172a;
-    --card-subtext: #64748b;
-    --card-pill-bg: #f1f5f9;
-    --card-fav-bg: rgba(255, 255, 255, 0.9);
-    --card-img-bg: #f8fafc;
-    --card-hover-border: #cbd5e1;
-    --card-hover-shadow: rgba(0, 0, 0, 0.06);
 }
 
 .tc-similar-card-wrapper .product-card {
@@ -591,11 +663,296 @@
     box-shadow: none !important;
 }
 
-.tc-similar-card-wrapper .product-card * {
-    color: #1e293b;
+/* =========================================================================
+   🤖 MODERN CHATBOT TASARIMI
+   ========================================================================= */
+
+/* ── Yüzen Buton (FAB) & Pulse Efekti ── */
+.tc-chatbot-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--theme-main);
+    color: #fff;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    animation: pulse-glow 2.5s infinite;
 }
 
-.tc-similar-card-wrapper .product-card .card-platform {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0px rgba(139, 92, 246, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(139, 92, 246, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0px rgba(139, 92, 246, 0);
+    }
+}
+
+.tc-chatbot-fab:hover {
+    transform: scale(1.1) translateY(-2px);
+}
+
+.tc-chatbot-fab.hidden {
+    transform: scale(0);
+    pointer-events: none;
+    animation: none;
+}
+
+/* ── Chatbot Penceresi (Modal Container) ── */
+.tc-chatbot-modal {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    height: 560px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tc-chatbot-modal.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* ── Chatbot Header ── */
+.tc-chatbot-header {
+    background: var(--theme-main);
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tc-chatbot-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tc-bot-avatar-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tc-bot-online-dot {
+    position: absolute;
+    bottom: 0px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border: 2px solid var(--theme-main);
+    border-radius: 50%;
+}
+
+.tc-chatbot-title-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.tc-chatbot-title {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.3px;
+}
+
+.tc-chatbot-subtitle {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+.tc-chatbot-close {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tc-chatbot-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Chatbot Gövdesi (Mesajlar) ── */
+.tc-chatbot-body {
+    flex: 1;
+    padding: 20px 24px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+}
+
+.tc-chatbot-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.tc-chatbot-body::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+.tc-chat-disclaimer {
+    color: #64748b;
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Modern Baloncuk (Bubble) Stilleri ── */
+.tc-chat-bubble {
+    max-width: 82%;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    word-wrap: break-word;
+}
+
+/* Yapay Zeka Mesajı (Sol) */
+.tc-chat-bubble.ai {
+    align-self: flex-start;
+    background: #fff;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px 20px 20px 4px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+/* Kullanıcı Mesajı (Sağ) */
+.tc-chat-bubble.user {
+    align-self: flex-end;
+    background: var(--theme-main);
+    color: #fff;
+    border-radius: 20px 20px 4px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Yazıyor... Animasyonu */
+.tc-chat-bubble.typing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    color: #94a3b8;
+}
+
+.tc-typing-icon {
+    animation: typing-bounce 1.5s infinite;
+}
+
+@keyframes typing-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateY(-3px);
+        opacity: 1;
+    }
+}
+
+/* ── Alt Kısım (Footer & Input) ── */
+.tc-chatbot-footer {
+    padding: 16px 20px;
+    background: #fff;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tc-chatbot-footer input {
+    flex: 1;
+    background: #f1f5f9;
+    border: 1px solid transparent;
+    border-radius: 24px;
+    padding: 12px 18px;
+    font-size: 14px;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.tc-chatbot-footer input::placeholder {
+    color: #94a3b8;
+}
+
+.tc-chatbot-footer input:focus {
+    background: #fff;
+    border-color: var(--theme-main);
+    box-shadow: 0 0 0 4px var(--theme-light);
+}
+
+.tc-chatbot-footer button {
+    background: #e2e8f0;
+    color: #94a3b8;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: not-allowed;
+    transition: all 0.2s ease;
+}
+
+.tc-chatbot-footer button.active {
+    background: var(--theme-main);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tc-chatbot-footer button.active:hover {
+    transform: scale(1.08) translateY(-1px);
 }
