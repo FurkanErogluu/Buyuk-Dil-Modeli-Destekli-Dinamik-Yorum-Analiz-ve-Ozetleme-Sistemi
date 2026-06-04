@@ -1,4 +1,5 @@
 using LLM_Destekli_Ozetleme.Models.Entities;
+using LLM_Destekli_Ozetleme.Models.DTOs;
 
 namespace LLM_Destekli_Ozetleme.Repositories
 {
@@ -7,5 +8,6 @@ namespace LLM_Destekli_Ozetleme.Repositories
         Task<Product?> GetByUrlOrHashAsync(string url, string hash);
         Task<Product?> GetByIdAsync(Guid id);
         Task<List<Product>> GetPopularProductsAsync(int minClicks, int limit);
+        Task<List<Product>> GetProductsAsync(ProductQueryParameters queryParams);
     }
 }

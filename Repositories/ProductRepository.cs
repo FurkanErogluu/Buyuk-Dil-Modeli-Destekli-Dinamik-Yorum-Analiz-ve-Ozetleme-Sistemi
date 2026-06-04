@@ -1,5 +1,6 @@
 using LLM_Destekli_Ozetleme.Data;
 using LLM_Destekli_Ozetleme.Models.Entities;
+using LLM_Destekli_Ozetleme.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace LLM_Destekli_Ozetleme.Repositories
@@ -31,6 +32,40 @@ namespace LLM_Destekli_Ozetleme.Repositories
                 .OrderByDescending(p => p.ClickCount)
                 .Take(limit)
                 .ToListAsync();
+        }
+
+        public async Task<List<Product>> GetProductsAsync(ProductQueryParameters queryParams)
+        {
+            var query = _context.Products.AsQueryable();
+            // Kategori Filtresi (Null uyarısını kapatan ve güvenli filtreleme yapan hali)
+            if (!string.IsNullOrWhiteSpace(queryParams.Category))
+            {
+                query = query.Where(p => p.Category != null && p.Category.ToLower() == queryParams.Category.ToLower());
+            }
+
+            if (!string.IsNullOrEmpty(queryParams.SearchTerm))
+            {
+                query = query.Where(p => p.ProductName.Contains(queryParams.SearchTerm));
+            }
+
+            query = queryParams.SortBy switch
+            {
+                "mostClicked" => query.OrderByDescending(p => p.ClickCount),
+                "mostLiked" => query.OrderByDescending(p => p.AvgModelScore),
+                _ => query.OrderByDescending(p => p.CreatedAt)
+            };
+
+            if (queryParams.Limit.HasValue)
+            {
+                query = query.Take(queryParams.Limit.Value);
+            }
+            else
+            {
+                query = query.Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
+                             .Take(queryParams.PageSize);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }
