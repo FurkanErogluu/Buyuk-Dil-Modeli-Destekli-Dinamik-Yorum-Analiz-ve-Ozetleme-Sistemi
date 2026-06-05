@@ -27,6 +27,8 @@ builder.Services.AddCors(options =>
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? "Varsayilan_Guclu_Anahtar_32_Karakter!");
 
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
